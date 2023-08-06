@@ -27,7 +27,7 @@ http://localhost:8080/swagger-ui/index.html#/
 -  POST /api/v1/todolist: Create a new todo list.
 - GET /api/v1/todolist/{id}: Get a specific todo list by ID.
 - GET /api/v1/todolist: Get all todo lists for the authenticated user.
-= PUT /api/v1/todolist/{id}: Update the name of a todo list.
+- PUT /api/v1/todolist/{id}: Update the name of a todo list.
 - DELETE /api/v1/todolist/{id}: Delete a todo list.
 
 ### TodoItem Endpoints:
