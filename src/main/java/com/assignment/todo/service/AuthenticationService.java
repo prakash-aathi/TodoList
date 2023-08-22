@@ -3,14 +3,15 @@ package com.assignment.todo.service;
 import org.springframework.http.ResponseEntity;
 
 import com.assignment.todo.dto.UserRequest;
+import com.assignment.todo.dto.UserResponse;
 import com.assignment.todo.dto.request.LoginRequest;
 
 public interface AuthenticationService {
 
-    ResponseEntity<?> saveUser(UserRequest userRequest);
+    UserResponse saveUser(UserRequest userRequest);
 
-    ResponseEntity<?> saveAdmin(UserRequest userRequest);
+    UserResponse saveAdmin(UserRequest userRequest);
 
-    ResponseEntity<?> authenticate(LoginRequest loginModel);
+    UserResponse authenticate(LoginRequest loginModel);
     
 }

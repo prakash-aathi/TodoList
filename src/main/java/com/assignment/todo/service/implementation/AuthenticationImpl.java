@@ -1,106 +1,74 @@
 package com.assignment.todo.service.implementation;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import javax.management.RuntimeErrorException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.assignment.todo.dto.ERole;
 import com.assignment.todo.dto.UserRequest;
 import com.assignment.todo.dto.UserResponse;
 import com.assignment.todo.dto.request.LoginRequest;
-import com.assignment.todo.dto.response.LoginResponse;
 import com.assignment.todo.mapstuct.mappers.MapperInterface;
 import com.assignment.todo.model.UserModel;
 import com.assignment.todo.repository.UserRepository;
-import com.assignment.todo.security.securityConfig.JwtUtils;
-import com.assignment.todo.security.securityServices.UserDetailsImpl;
 import com.assignment.todo.service.AuthenticationService;
 
 @Service
 public class AuthenticationImpl implements AuthenticationService {
 
-    @Autowired
-    UserRepository userRepository;
+        @Autowired
+        UserRepository userRepository;
 
-    @Autowired
-    PasswordEncoder encoder;
+        private static final String USER_NAME_NOT_FOUND_EXCEPTION = "User email not found in database";
 
-    @Autowired
-    AuthenticationManager authenticationManager;
+        @Override
+        public UserResponse saveUser(UserRequest userRequest) {
 
-    @Autowired
-    JwtUtils jwtUtils;
+                if (userRepository.existsByEmail(userRequest.getEmail())) {
+                        throw new RuntimeException("Error: Email is already in use!");
+                }
 
-    private static final String USER_NAME_NOT_FOUND_EXCEPTION = "User email not found in database";
+                UserModel user = MapperInterface.INSTANCE.UserRequestToUserModel(userRequest);
+                user.setUserRole(ERole.USER);
 
-    @Override
-    public ResponseEntity<?> saveUser(UserRequest userRequest) {
+                UserResponse userResponse = MapperInterface.INSTANCE
+                                .UserModelToUserResponse(userRepository.save(user));
 
-        if (userRepository.existsByEmail(userRequest.getEmail())) {
-            return ResponseEntity.badRequest()
-                    .body("Error: Email is already in use!");
+                return userResponse;
         }
 
-        UserModel user = MapperInterface.INSTANCE.UserRequestToUserModel(userRequest);
-        user.setUserRole(ERole.USER);
-        user.setPassword(encoder.encode(user.getPassword()));
+        @Override
+        public UserResponse saveAdmin(UserRequest userRequest) {
 
-        UserResponse userResponse = MapperInterface.INSTANCE
-                .UserModelToUserResponse(userRepository.save(user));
+                if (userRepository.existsByEmail(userRequest.getEmail())) {
+                        throw new RuntimeException("Error: Email is already in use!");
+                }
+                UserModel user = MapperInterface.INSTANCE.UserRequestToUserModel(userRequest);
+                user.setUserRole(ERole.ADMIN);
 
-        return ResponseEntity.ok(userResponse);
-    }
+                UserResponse userResponse = MapperInterface.INSTANCE
+                                .UserModelToUserResponse(userRepository.save(user));
 
-    @Override
-    public ResponseEntity<?> saveAdmin(UserRequest userRequest) {
-
-        if (userRepository.existsByEmail(userRequest.getEmail())) {
-            return ResponseEntity.badRequest()
-                    .body("Error: Email is already in use!");
+                return userResponse;
         }
-        UserModel user = MapperInterface.INSTANCE.UserRequestToUserModel(userRequest);
-        user.setUserRole(ERole.ADMIN);
-        user.setPassword(encoder.encode(user.getPassword()));
 
-        UserResponse userResponse = MapperInterface.INSTANCE
-                .UserModelToUserResponse(userRepository.save(user));
+        @Override
+        public UserResponse authenticate(LoginRequest loginModel) {
 
-        return ResponseEntity.ok(userResponse);
-    }
+                UserModel user = userRepository.findByEmail(loginModel.getEmail()).get();
+                if (user == null) {
+                        throw new RuntimeException(USER_NAME_NOT_FOUND_EXCEPTION);
+                }
 
-    @Override
-    public ResponseEntity<?> authenticate(LoginRequest loginModel) {
-        UserModel userModel = userRepository.findByEmail(loginModel.getEmail())
-                        .orElseThrow(() -> new UsernameNotFoundException(USER_NAME_NOT_FOUND_EXCEPTION));
+                if (!user.getPassword().equals(loginModel.getPassword())) {
+                        throw new RuntimeException("Invalid password");
+                }
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginModel.getEmail(), loginModel.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
+                UserResponse userResponse = MapperInterface.INSTANCE.UserModelToUserResponse(user);
+                return userResponse;
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
-
-        LoginResponse outResponse = LoginResponse.builder()
-                .token(jwt)
-                .type("Bearer")
-                .username(userDetails.getUsername())
-                .email(userModel.getEmail())
-                .roles(roles.get(0))
-                .build();
-
-        return ResponseEntity.ok(outResponse);
-    }
+        }
 
 }

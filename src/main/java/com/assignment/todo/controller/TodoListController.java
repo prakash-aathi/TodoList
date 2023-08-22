@@ -1,6 +1,5 @@
 package com.assignment.todo.controller;
 
-import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +25,8 @@ public class TodoListController {
     TodoListService todoListService;
 
     @PostMapping
-    public ResponseEntity<?> createTodoList(@RequestBody TodoListRequest todoListRequest, Principal principal) {
-        return todoListService.createTodoList(todoListRequest, principal.getName());
+    public ResponseEntity<?> createTodoList(@RequestBody TodoListRequest todoListRequest, String userName) {
+        return todoListService.createTodoList(todoListRequest, userName);
     }
 
     @GetMapping("{id}")
@@ -36,8 +35,8 @@ public class TodoListController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TodoList>> getAllTodoListsForUser(Principal principal) {
-        List<TodoList> todoLists = todoListService.getAllTodoListsForUser(principal.getName());
+    public ResponseEntity<List<TodoList>> getAllTodoListsForUser(String userName) {
+        List<TodoList> todoLists = todoListService.getAllTodoListsForUser(userName);
         return ResponseEntity.ok(todoLists);
     }
 

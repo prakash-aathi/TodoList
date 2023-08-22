@@ -1,0 +1,14 @@
+type userResponse  {
+    id: Int
+    email: String
+    username: String
+    userRole: String
+}
+	
+type Query {
+    saveAdmin(email: String, username: String, password: String): userResponse
+    saveUser(email: String, username: String, password: String): userResponse
+    authenticate(email:String, password:String): userResponse
+}
+
+
