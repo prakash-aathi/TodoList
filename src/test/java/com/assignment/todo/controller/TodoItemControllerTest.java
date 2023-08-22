@@ -18,7 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.assignment.todo.dto.TodoItemRequest;
+import com.assignment.todo.dto.request.TodoItemRequest;
 import com.assignment.todo.model.TodoItem;
 import com.assignment.todo.service.TodoItemService;
 

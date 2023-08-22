@@ -1,4 +1,4 @@
-package com.assignment.todo.dto;
+package com.assignment.todo.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

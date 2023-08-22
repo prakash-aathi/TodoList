@@ -3,13 +3,16 @@ package com.assignment.todo.service.implementation;
 import java.net.URI;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.assignment.todo.dto.TodoItemRequest;
+import com.assignment.todo.dto.request.TodoItemRequest;
+import com.assignment.todo.mapstuct.mappers.MapperInterface;
 import com.assignment.todo.model.TodoItem;
 import com.assignment.todo.model.TodoList;
 import com.assignment.todo.repository.TodoItemRepository;
@@ -26,6 +29,7 @@ public class TodoItemImpl implements TodoItemService {
     TodoItemRepository todoItemRepository;
 
     @Override
+    @Transactional
     public ResponseEntity<?> createTodoItem(Long todoListId, TodoItemRequest todoItemRequest) {
 
         Optional<TodoList> todoListOptional = todoListRepository.findById(todoListId);
@@ -37,12 +41,7 @@ public class TodoItemImpl implements TodoItemService {
 
         TodoList todoList = todoListOptional.get();
 
-        TodoItem todoItem = TodoItem.builder()
-                .description(todoItemRequest.getDescription())
-                .completed(todoItemRequest.getCompleted())
-                .title(todoItemRequest.getTitle())
-                .dueDate(todoItemRequest.getDueDate())
-                .build();
+        TodoItem todoItem = MapperInterface.INSTANCE.TodoItemRequestToTodoItem(todoItemRequest);
 
         todoList.getTodoItems().add(todoItem);
 

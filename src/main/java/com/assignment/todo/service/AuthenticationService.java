@@ -2,8 +2,8 @@ package com.assignment.todo.service;
 
 import org.springframework.http.ResponseEntity;
 
-import com.assignment.todo.dto.LoginRequest;
 import com.assignment.todo.dto.UserRequest;
+import com.assignment.todo.dto.request.LoginRequest;
 
 public interface AuthenticationService {
 

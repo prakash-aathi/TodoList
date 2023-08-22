@@ -15,8 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.assignment.todo.dto.ERole;
-import com.assignment.todo.dto.LoginRequest;
 import com.assignment.todo.dto.UserRequest;
+import com.assignment.todo.dto.request.LoginRequest;
 import com.assignment.todo.model.UserModel;
 import com.assignment.todo.service.AuthenticationService;
 

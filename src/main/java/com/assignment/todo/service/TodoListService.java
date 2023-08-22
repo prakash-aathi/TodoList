@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
-import com.assignment.todo.dto.TodoListRequest;
+import com.assignment.todo.dto.request.TodoListRequest;
 import com.assignment.todo.model.TodoList;
 
 public interface TodoListService {
