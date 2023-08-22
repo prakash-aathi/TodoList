@@ -2,7 +2,7 @@ package com.assignment.todo.service;
 
 import org.springframework.http.ResponseEntity;
 
-import com.assignment.todo.dto.TodoItemRequest;
+import com.assignment.todo.dto.request.TodoItemRequest;
 
 public interface TodoItemService  {
 

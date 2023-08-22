@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.assignment.todo.dto.LoginRequest;
 import com.assignment.todo.dto.UserRequest;
+import com.assignment.todo.dto.request.LoginRequest;
 import com.assignment.todo.service.AuthenticationService;
 
 
@@ -19,7 +19,6 @@ public class AuthController {
 	
 	@PostMapping("/admin/signup")
 	public ResponseEntity<?> saveAdmin(@RequestBody UserRequest userRequest) {
-		
 		return authenticationService.saveAdmin(userRequest);
 	}
 	

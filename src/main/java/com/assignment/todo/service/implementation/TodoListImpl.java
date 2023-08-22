@@ -10,8 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.assignment.todo.dto.TodoListRequest;
-import com.assignment.todo.dto.TodoListResponse;
+import com.assignment.todo.dto.request.TodoListRequest;
+import com.assignment.todo.dto.response.TodoListResponse;
+import com.assignment.todo.mapstuct.mappers.MapperInterface;
 import com.assignment.todo.model.TodoList;
 import com.assignment.todo.repository.TodoListRepository;
 import com.assignment.todo.service.TodoListService;
@@ -37,10 +38,8 @@ public class TodoListImpl implements TodoListService {
                 .buildAndExpand(savedTodoList.getId())
                 .toUri();
 
-        TodoListResponse response = TodoListResponse.builder()
-                .id(savedTodoList.getId())
-                .name(savedTodoList.getName())
-                .build();
+        TodoListResponse response = MapperInterface.INSTANCE
+                .TodoModelToTodoResponse(savedTodoList);
 
         return ResponseEntity.created(loaction).body(response);
     }
@@ -54,10 +53,8 @@ public class TodoListImpl implements TodoListService {
                     .body("TodoList not found with ID: " + id);
         }
 
-        TodoListResponse response = TodoListResponse.builder()
-                .id(todoListOptional.get().getId())
-                .name(todoListOptional.get().getName())
-                .build();
+        TodoListResponse response = MapperInterface.INSTANCE
+                .TodoModelToTodoResponse(todoListOptional.get());
 
         return ResponseEntity.ok(response);
     }
@@ -81,10 +78,8 @@ public class TodoListImpl implements TodoListService {
 
         TodoList savedTodoList = todoListRepository.save(todoList);
 
-        TodoListResponse response = TodoListResponse.builder()
-                .id(savedTodoList.getId())
-                .name(savedTodoList.getName())
-                .build();
+        TodoListResponse response = MapperInterface.INSTANCE
+                    .TodoModelToTodoResponse(savedTodoList);
 
         return ResponseEntity.ok(response);
     }
@@ -102,7 +97,5 @@ public class TodoListImpl implements TodoListService {
 
         return ResponseEntity.ok("TodoList deleted successfully");
     }
-
-    
 
 }

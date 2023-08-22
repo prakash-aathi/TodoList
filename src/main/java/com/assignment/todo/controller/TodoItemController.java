@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.assignment.todo.dto.TodoItemRequest;
+import com.assignment.todo.dto.request.TodoItemRequest;
 import com.assignment.todo.service.TodoItemService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
